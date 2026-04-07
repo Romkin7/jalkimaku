@@ -1,0 +1,25 @@
+{
+  "name": "jalkimaku-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "host": "nuxt dev --host",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@zxing/browser": "^0.1.5",
+    "bcrypt": "^6.0.0",
+    "mongodb": "^6.0.0",
+    "nanoid": "^5.0.0",
+    "nuxt": "^4.0.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^25.5.0",
+    "@types/qrcode": "^1.5.5"
+  }
+}
