@@ -1,6 +1,9 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   future: { compatibilityVersion: 4 },
+  routeRules: {
+    '/restaurant/**': { ssr: false },
+  },
   runtimeConfig: {
     webhookSecret: process.env.ODOO_WEBHOOK_SECRET,
     couponExpiryDays: process.env.COUPON_EXPIRY_DAYS || '30',

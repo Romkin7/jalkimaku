@@ -3,7 +3,7 @@
     <div class="card">
       <div class="hero-icon">🍽️</div>
       <h1 class="title">Ilmainen ateria sinulle</h1>
-      <p class="subtitle">Syötä autosi rekisterinumero ja lunasta kuponkisi</p>
+      <p class="subtitle">Oston jälkeen lisää tähän kenttään auton rekisterinumero ja paina "Lähetä". Tervetuloa maistamaan kaupungin parasta pastramia.</p>
 
       <form class="form" @submit.prevent="claim">
         <label class="label" for="reg-plate">Rekisterinumero</label>
@@ -15,7 +15,7 @@
         />
         <button class="btn" type="submit" :disabled="loading">
           <span v-if="loading" class="spinner" />
-          {{ loading ? 'Haetaan...' : 'Hae ilmainen ateria →' }}
+          {{ loading ? 'Haetaan...' : 'Lähetä' }}
         </button>
       </form>
 

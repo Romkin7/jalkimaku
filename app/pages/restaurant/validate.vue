@@ -54,6 +54,8 @@
       <video ref="videoRef" class="scanner-video" playsinline autoplay muted />
       <button class="scanner-cancel" @click="closeScanner">Peruuta</button>
     </div>
+
+    <input ref="fileInputRef" type="file" accept="image/*" capture="environment" style="display:none" @change="onFileCapture" />
   </main>
 </template>
 
@@ -66,7 +68,9 @@ const result = ref<null | { ok: boolean; message: string; details?: Record<strin
 const inputRef = ref<HTMLInputElement>()
 const scanning = ref(false)
 const videoRef = ref<HTMLVideoElement>()
+const fileInputRef = ref<HTMLInputElement>()
 let stopScanning: (() => void) | null = null
+
 
 function formatTs(ts: number) {
   return new Date(ts * 1000).toLocaleString('fi-FI')
@@ -102,10 +106,11 @@ async function validate() {
     )
     result.value = {
       ok: true,
-      message: 'Kuponki on voimassa',
+      message: 'Kuponki merkitty käytetyksi',
       details: {
         Tilausnumero: data.orderNumber,
         Rekisterinumero: data.regPlate,
+        Käytetty: formatTs(data.redeemedAt),
       },
     }
   } catch (err: any) {
@@ -131,21 +136,89 @@ async function validate() {
   }
 }
 
+async function readQR(source: HTMLVideoElement | HTMLImageElement): Promise<string> {
+  // BarcodeDetector: native API, works on iOS 17+ and Chrome 83+
+  if ('BarcodeDetector' in window) {
+    const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] })
+    const codes = await detector.detect(source)
+    if (codes.length > 0) return codes[0].rawValue
+    throw new Error('not found')
+  }
+  // Fallback: @zxing via canvas → img element
+  const { BrowserMultiFormatReader } = await import('@zxing/browser')
+  const reader = new BrowserMultiFormatReader()
+  const canvas = document.createElement('canvas')
+  const w = source instanceof HTMLVideoElement ? source.videoWidth : source.naturalWidth
+  const h = source instanceof HTMLVideoElement ? source.videoHeight : source.naturalHeight
+  canvas.width = w
+  canvas.height = h
+  canvas.getContext('2d')!.drawImage(source, 0, 0, w, h)
+  const img = new Image()
+  img.src = canvas.toDataURL()
+  await new Promise<void>(resolve => { img.onload = () => resolve() })
+  const res = await reader.decodeFromImageElement(img)
+  return res.getText()
+}
+
 async function openScanner() {
   scanning.value = true
   await nextTick()
-  const { BrowserMultiFormatReader } = await import('@zxing/browser')
-  const reader = new BrowserMultiFormatReader()
+
+  let stream: MediaStream
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' } },
+    })
+  } catch {
+    scanning.value = false
+    fileInputRef.value?.click()
+    return
+  }
+
+  const video = videoRef.value!
+  video.srcObject = stream
+  await video.play()
+
   let done = false
-  reader.decodeFromVideoDevice(undefined, videoRef.value!, (res) => {
-    if (res && !done) {
+  const intervalId = setInterval(async () => {
+    if (done || video.readyState < 2) return
+    try {
+      const value = await readQR(video)
       done = true
+      clearInterval(intervalId)
+      stream.getTracks().forEach(t => t.stop())
       closeScanner()
-      code.value = res.getText()
+      code.value = value
       validate()
-    }
-  })
-  stopScanning = () => reader.reset()
+    } catch { /* keep trying */ }
+  }, 300)
+
+  stopScanning = () => {
+    done = true
+    clearInterval(intervalId)
+    stream.getTracks().forEach(t => t.stop())
+  }
+}
+
+async function onFileCapture(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  const url = URL.createObjectURL(file)
+  const img = new Image()
+  try {
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve()
+      img.onerror = reject
+      img.src = url
+    })
+    code.value = await readQR(img)
+    await validate()
+  } catch {
+    result.value = { ok: false, message: 'QR-koodia ei tunnistettu. Yritä uudelleen.' }
+  } finally {
+    URL.revokeObjectURL(url)
+    if (fileInputRef.value) fileInputRef.value.value = ''
+  }
 }
 
 function closeScanner() {
