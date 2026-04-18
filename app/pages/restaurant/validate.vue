@@ -2,14 +2,20 @@
   <main class="page">
     <div class="card">
       <div class="header">
-        <div class="header-titles">
-          <span class="badge">Ravintola</span>
-          <h1 class="title">Kupongin tarkistus</h1>
-        </div>
-        <button class="logout-btn" type="button" @click="logout">Kirjaudu ulos</button>
+        <span class="badge">Ravintola</span>
+        <h1 class="title">Kupongin tarkistus</h1>
       </div>
 
-      <form class="form" @submit.prevent="validate">
+      <div class="scan-section">
+        <button type="button" class="btn btn-scan" @click="openScanner">
+          📷 Skannaa QR
+        </button>
+        <button type="button" class="fallback-toggle" @click="showManual = !showManual">
+          {{ showManual ? 'Piilota manuaalinen syöttö' : 'QR-koodi ei toimi? Syötä koodi käsin' }}
+        </button>
+      </div>
+
+      <form v-if="showManual" class="form" @submit.prevent="validate">
         <input
           ref="inputRef"
           v-model="code"
@@ -25,10 +31,26 @@
           <span v-if="loading" class="spinner" />
           {{ loading ? 'Tarkistetaan...' : 'Tarkista kuponki' }}
         </button>
-        <button type="button" class="btn btn-scan" @click="openScanner">
-          📷 Skannaa QR
-        </button>
       </form>
+
+      <div class="instructions">
+        <p class="instructions-heading">QR-skannaus</p>
+        <ol class="instructions-list">
+          <li>Pyydä asiakasta näyttämään kuponki puhelimestaan.</li>
+          <li>Paina <strong>Skannaa QR</strong> — puhelin avaa kameran.</li>
+          <li>Osoita kamera kupongin QR-koodiin ja ota kuva.</li>
+          <li>Sovellus tarkistaa kupongin automaattisesti.</li>
+          <li>Vihreä ruutu = hyväksytty ja merkitty käytetyksi. Punainen ruutu = ei voimassa.</li>
+        </ol>
+
+        <p class="instructions-heading">Manuaalinen syöttö</p>
+        <ol class="instructions-list">
+          <li>Pyydä asiakasta näyttämään kupongin koodi puhelimestaan.</li>
+          <li>Kirjoita koodi kenttään.</li>
+          <li>Paina <strong>Tarkista kuponki</strong>.</li>
+          <li>Vihreä ruutu = hyväksytty ja merkitty käytetyksi. Punainen ruutu = ei voimassa.</li>
+        </ol>
+      </div>
     </div>
 
     <Transition name="overlay">
@@ -64,6 +86,7 @@ definePageMeta({ middleware: 'restaurant-auth' })
 
 const code = ref('')
 const loading = ref(false)
+const showManual = ref(false)
 const result = ref<null | { ok: boolean; message: string; details?: Record<string, string> }>(null)
 const inputRef = ref<HTMLInputElement>()
 const scanning = ref(false)
@@ -237,10 +260,6 @@ function closeScanner() {
   stopScanning = null
 }
 
-async function logout() {
-  await $fetch('/api/auth/logout', { method: 'POST' })
-  navigateTo('/restaurant/login')
-}
 </script>
 
 <style scoped>
@@ -249,7 +268,7 @@ async function logout() {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 6rem 1.5rem 1.5rem;
   background: #1a1a1a;
 }
 
@@ -263,30 +282,8 @@ async function logout() {
 }
 
 .header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 1.75rem;
-}
-
-.header-titles {
   text-align: center;
-  flex: 1;
-}
-
-.logout-btn {
-  background: transparent;
-  border: none;
-  color: #6b7280;
-  font-size: 0.75rem;
-  font-family: inherit;
-  cursor: pointer;
-  padding: 0;
-  align-self: flex-start;
-}
-
-.logout-btn:hover {
-  color: #9ca3af;
+  margin-bottom: 1.75rem;
 }
 
 .badge {
@@ -308,10 +305,35 @@ async function logout() {
   color: #f9fafb;
 }
 
+.scan-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fallback-toggle {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+  text-align: center;
+  transition: color 0.15s;
+}
+
+.fallback-toggle:hover {
+  color: #9ca3af;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-top: 1rem;
 }
 
 .input {
@@ -502,6 +524,41 @@ async function logout() {
   width: 100%;
   max-width: 480px;
   border-radius: 8px;
+}
+
+.instructions {
+  margin-top: 1.75rem;
+  padding: 1.25rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #3f3f46;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: #9ca3af;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.instructions-heading {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin-bottom: 0.4rem;
+}
+
+.instructions-list {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.instructions-list li strong {
+  color: #d1d5db;
 }
 
 .scanner-cancel {

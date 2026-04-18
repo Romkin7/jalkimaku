@@ -8,7 +8,8 @@
     </NuxtLink>
     <nav class="nav">
       <NuxtLink to="/" :class="['nav-link', { 'nav-link--light': isLightText }]">Asiakkaalle</NuxtLink>
-      <NuxtLink to="/restaurant/login" :class="['nav-link', { 'nav-link--light': isLightText }]">Ravintolalle</NuxtLink>
+      <button v-if="isRestaurant" class="nav-link nav-link--light nav-logout" @click="logout">Kirjaudu ulos</button>
+      <NuxtLink v-else to="/restaurant/login" :class="['nav-link', { 'nav-link--light': isLightText }]">Ravintolalle</NuxtLink>
     </nav>
   </header>
 </template>
@@ -18,6 +19,12 @@ const route = useRoute()
 const isLightText = computed(() =>
   route.path.startsWith('/restaurant/') || route.path.startsWith('/coupon/')
 )
+const isRestaurant = computed(() => route.path.startsWith('/restaurant/'))
+
+async function logout() {
+  await $fetch('/api/auth/logout', { method: 'POST' })
+  navigateTo('/restaurant/login')
+}
 </script>
 
 <style scoped>
@@ -57,6 +64,14 @@ const isLightText = computed(() =>
 
 .nav-link--light:hover {
   color: #f9fafb;
+}
+
+.nav-logout {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .brand {
