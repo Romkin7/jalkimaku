@@ -1,5 +1,5 @@
 <template>
-  <header class="app-header">
+  <header :class="['app-header', { 'app-header--dark': isRestaurant }]">
     <NuxtLink to="/" :class="['brand', { 'brand--light': isLightText }]">
       <span class="steam">
         <span>〜</span><span>〜</span><span>〜</span>
@@ -64,6 +64,11 @@ async function logout() {
 
 .nav-link--light:hover {
   color: #f9fafb;
+}
+
+.app-header--dark {
+  background: #1a1a1a;
+  border-bottom: 1px solid #2a2a2a;
 }
 
 .nav-logout {
