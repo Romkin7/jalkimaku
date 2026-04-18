@@ -16,6 +16,11 @@
         <p class="section-detail">Rengas Center — Klaukkala</p>
       </div>
 
+      <div class="footer-links">
+        <NuxtLink to="/kayttoehdot" class="link">Käyttöehdot</NuxtLink>
+        <NuxtLink to="/restaurant/login" class="link">Ravintolalle</NuxtLink>
+      </div>
+
       <div class="footer-company">
         ATMD Oy · Y-tunnus: 2470070-6
       </div>
@@ -81,14 +86,23 @@
   opacity: 0.7;
 }
 
+.footer-links {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
 .footer-company {
   flex-basis: 100%;
   text-align: center;
   font-size: 0.65rem;
   color: var(--muted);
   opacity: 0.7;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
 }
 
 .footer-credit {

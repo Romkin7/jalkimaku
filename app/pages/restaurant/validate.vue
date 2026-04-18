@@ -160,7 +160,17 @@ async function readQR(source: HTMLVideoElement | HTMLImageElement): Promise<stri
   return res.getText()
 }
 
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+}
+
 async function openScanner() {
+  if (isIOS()) {
+    fileInputRef.value?.click()
+    return
+  }
+
   scanning.value = true
   await nextTick()
 

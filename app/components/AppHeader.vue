@@ -1,21 +1,62 @@
 <template>
   <header class="app-header">
-    <NuxtLink to="/" class="brand">
+    <NuxtLink to="/" :class="['brand', { 'brand--light': isLightText }]">
       <span class="steam">
         <span>〜</span><span>〜</span><span>〜</span>
       </span>
       <em>Jälkimaku</em>
     </NuxtLink>
+    <nav class="nav">
+      <NuxtLink to="/" :class="['nav-link', { 'nav-link--light': isLightText }]">Asiakkaalle</NuxtLink>
+      <NuxtLink to="/restaurant/login" :class="['nav-link', { 'nav-link--light': isLightText }]">Ravintolalle</NuxtLink>
+    </nav>
   </header>
 </template>
+
+<script setup lang="ts">
+const route = useRoute()
+const isLightText = computed(() =>
+  route.path.startsWith('/restaurant/') || route.path.startsWith('/coupon/')
+)
+</script>
 
 <style scoped>
 .app-header {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   padding: 1.25rem 1.5rem;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.nav-link:hover {
+  color: var(--text);
+}
+
+.nav-link--light {
+  color: #6b7280;
+}
+
+.nav-link--light:hover {
+  color: #f9fafb;
 }
 
 .brand {
@@ -32,6 +73,14 @@
 
 .brand em {
   font-style: italic;
+}
+
+.brand--light {
+  color: #f9fafb;
+}
+
+.brand--light .steam {
+  color: #9ca3af;
 }
 
 .steam {
