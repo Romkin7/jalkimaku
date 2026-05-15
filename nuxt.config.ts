@@ -17,7 +17,7 @@ export default defineNuxtConfig({
         {
           name: 'stub-native-node-addons',
           resolveId(id: string) {
-            if (id.endsWith('.node')) return '\0node-native-stub'
+            if (id.endsWith('.node') || id === 'socks') return '\0node-native-stub'
           },
           load(id: string) {
             if (id === '\0node-native-stub') return 'module.exports = {}'
