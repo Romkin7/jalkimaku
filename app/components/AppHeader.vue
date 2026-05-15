@@ -17,7 +17,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const isLightText = computed(() =>
-  route.path.startsWith('/restaurant/') || route.path.startsWith('/coupon/')
+  route.path.startsWith('/restaurant/')
 )
 const isRestaurant = computed(() => route.path.startsWith('/restaurant/'))
 

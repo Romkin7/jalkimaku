@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jalkimaku-website",
+  "main": "dist/_worker.js/index.js",
+  // Set this to today's date
+  "compatibility_date": "2026-05-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "dist",
+  },
+  "observability": {
+    "enabled": true,
+  },
+}
