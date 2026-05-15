@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/credential-providers": "^3.1047.0",
+    "@mongodb-js/zstd": "^2.0.1",
     "@zxing/browser": "^0.1.5",
     "bcrypt": "^6.0.0",
     "mongodb": "^6.0.0",
