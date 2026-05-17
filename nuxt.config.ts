@@ -17,7 +17,11 @@ export default defineNuxtConfig({
         {
           name: 'stub-native-node-addons',
           resolveId(id: string) {
-            if (id.endsWith('.node') || id === 'socks') return '\0node-native-stub'
+            const MONGODB_OPTIONAL_DEPS = new Set([
+              'socks', 'aws4', 'kerberos', 'snappy',
+              'gcp-metadata', 'mongodb-client-encryption', '@mongodb-js/zstd',
+            ])
+            if (id.endsWith('.node') || MONGODB_OPTIONAL_DEPS.has(id)) return '\0node-native-stub'
           },
           load(id: string) {
             if (id === '\0node-native-stub') return 'module.exports = {}'
