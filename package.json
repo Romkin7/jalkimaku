@@ -12,7 +12,7 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@aws-sdk/credential-providers": "^3.1047.0",
+    "@aws-sdk/credential-providers": "^3.1048.0",
     "@zxing/browser": "^0.1.5",
     "bcrypt": "^6.0.0",
     "mongodb": "^6.0.0",
