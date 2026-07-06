@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
-
+ecosystem.config.mjs
+ecosystem.config.cjs
 # Nuxt build output
 .nuxt/
 .output/
