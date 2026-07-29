@@ -47,7 +47,7 @@ jobs:
           ssh -i /tmp/deploy_key \
             -o StrictHostKeyChecking=no \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "pm2 restart jalkimaku || pm2 start ${{ secrets.EC2_APP_DIR }}/.output/server/index.mjs --name jalkimaku && pm2 save"
+            "pm2 delete JALKIMAKU-SERVER >/dev/null 2>&1; pm2 restart jalkimaku || pm2 start ${{ secrets.EC2_APP_DIR }}/.output/server/index.mjs --name jalkimaku; pm2 save"
 
       - name: Cleanup SSH key
         if: always()
