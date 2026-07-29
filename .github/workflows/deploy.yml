@@ -13,8 +13,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22.14.0'
-          cache: 'npm'
+          node-version: "22.14.0"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -28,6 +28,7 @@ jobs:
           ODOO_WEBHOOK_SECRET: ${{ secrets.ODOO_WEBHOOK_SECRET }}
           COUPON_EXPIRY_DAYS: ${{ secrets.COUPON_EXPIRY_DAYS }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
 
       - name: Write SSH key
         run: |
