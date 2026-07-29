@@ -3,6 +3,8 @@ export interface Order {
   orderNumber: string
   regPlate: string
   odooPartnerId: number | null
+  email: string | null
+  customerName: string | null
   createdAt: number
 }
 

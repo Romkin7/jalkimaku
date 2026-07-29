@@ -24,4 +24,5 @@ npm-debug.log*
 !.dev.vars.example
 
 ecosystem.config.js
+ecosystem.config.cjs
 
