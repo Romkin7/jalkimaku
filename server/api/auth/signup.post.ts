@@ -3,6 +3,10 @@ import { nanoid } from 'nanoid'
 import { admins } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
+  if (process.env.NODE_ENV === 'production') {
+    throw createError({ statusCode: 403, message: 'signup is disabled' })
+  }
+
   const body = await readBody(event)
   const { username, password } = body ?? {}
 
