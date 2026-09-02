@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   if (!guarded.some(p => url.startsWith(p))) return
 
   const session = await useSession(event, getSessionConfig())
-  if (!session.data.authenticated) {
+  if (!session.data.authenticated || !session.data.username) {
     if (url.startsWith('/api/')) {
       throw createError({ statusCode: 401 })
     } else {

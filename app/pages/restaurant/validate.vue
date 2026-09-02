@@ -82,8 +82,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ middleware: 'restaurant-auth' })
-
 const code = ref('')
 const loading = ref(false)
 const showManual = ref(false)
