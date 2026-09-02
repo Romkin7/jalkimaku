@@ -1,33 +1,48 @@
 <template>
   <main class="page">
-    <div class="card">
-      <div class="hero-icon">🍽️</div>
-      <h1 class="title">Ilmainen ateria sinulle</h1>
-      <p class="subtitle">Oston jälkeen lisää tähän kenttään auton rekisterinumero ja paina "Lähetä". Tervetuloa maistamaan kaupungin parasta pastramia.</p>
+    <div class="stack">
+      <a href="https://www.rengascenterilola.fi" target="_blank" rel="noopener" class="promo">
+        <img :src="rengasLogoUrl" alt="Rengas Center Ilola" class="promo-logo" />
+        <div class="promo-body">
+          <p class="promo-title">Rengas Center Ilola</p>
+          <p class="promo-text">
+            Osta 4 uuden renkaan setti Rengas Center Ilolan verkkosivuilta ja saat
+            <strong>26,90 €</strong> arvoisen kupongin MR PASTRAMIin.
+          </p>
+        </div>
+      </a>
 
-      <form class="form" @submit.prevent="claim">
-        <label class="label" for="reg-plate">Rekisterinumero</label>
-        <RegPlateInput
-          id="reg-plate"
-          v-model="regPlate"
-          placeholder="ABC-123"
-          required
-        />
-        <button class="btn" type="submit" :disabled="loading">
-          <span v-if="loading" class="spinner" />
-          {{ loading ? 'Haetaan...' : 'Lähetä' }}
-        </button>
-      </form>
+      <div class="card">
+        <div class="hero-icon">🍽️</div>
+        <h1 class="title">Ilmainen ateria sinulle</h1>
+        <p class="subtitle">Oston jälkeen lisää tähän kenttään auton rekisterinumero ja paina "Lähetä". Tervetuloa maistamaan kaupungin parasta pastramia.</p>
 
-      <div v-if="error" class="error-box" role="alert">
-        <span class="error-icon">⚠️</span>
-        {{ error }}
+        <form class="form" @submit.prevent="claim">
+          <label class="label" for="reg-plate">Rekisterinumero</label>
+          <RegPlateInput
+            id="reg-plate"
+            v-model="regPlate"
+            placeholder="ABC-123"
+            required
+          />
+          <button class="btn" type="submit" :disabled="loading">
+            <span v-if="loading" class="spinner" />
+            {{ loading ? 'Haetaan...' : 'Lähetä' }}
+          </button>
+        </form>
+
+        <div v-if="error" class="error-box" role="alert">
+          <span class="error-icon">⚠️</span>
+          {{ error }}
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
+const rengasLogoUrl = '/partners/rengas-center-ilola-logo.png'
+
 const regPlate = ref('')
 const loading = ref(false)
 const error = ref('')
@@ -62,6 +77,15 @@ async function claim() {
   background: linear-gradient(160deg, #fff8e7 0%, #f7f7f5 60%);
 }
 
+.stack {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 .card {
   width: 100%;
   max-width: 420px;
@@ -90,6 +114,51 @@ async function claim() {
   color: var(--muted);
   font-size: 0.95rem;
   margin-bottom: 2rem;
+}
+
+.promo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  text-align: left;
+  text-decoration: none;
+  background: #fff8e7;
+  border: 1px solid #fde9b8;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.25rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.promo:hover {
+  background: #fef3d9;
+  border-color: #fbdb8f;
+}
+
+.promo-logo {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+
+.promo-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.promo-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.promo-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.4;
 }
 
 .form {

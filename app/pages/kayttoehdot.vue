@@ -2,8 +2,14 @@
   <main class="page">
     <div class="card">
       <h1 class="title">Käyttöehdot</h1>
+      <p class="intro">
+        Osta 4 uuden renkaan setti
+        <a href="https://www.rengascenterilola.fi" target="_blank" rel="noopener" class="link">Rengas Center Ilolan</a>
+        verkkosivuilta, niin saat sähköpostiisi <strong>26,90 €</strong> arvoisen kupongin
+        <strong>MR PASTRAMI</strong> -ravintolaan.
+      </p>
       <ul class="terms">
-        <li>Kuponkia ei voida muuttaa rahaksi. Se on voimassa 6 kuukautta.</li>
+        <li>Kupongin arvo on 26,90 €, eikä sitä voida muuttaa rahaksi. Se on voimassa 6 kuukautta.</li>
         <li>Kupongin voi käyttää vain <strong>MR PASTRAMI</strong> -ravintolassa.</li>
         <li>
           Yhden kupongin saa yhtä tilausta kohden, kun tilaus sisältää 4 uutta rengasta
@@ -41,6 +47,13 @@
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--text);
+  margin-bottom: 1.5rem;
+}
+
+.intro {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.5;
   margin-bottom: 1.5rem;
 }
 
