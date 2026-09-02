@@ -1,4 +1,5 @@
 import { orders, coupons } from '../../utils/db'
+import { sendCouponEmail } from '../../utils/email'
 
 function normalizePlate(plate: string): string {
   return plate.toUpperCase().replace(/[-\s]/g, '')
@@ -34,6 +35,18 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 404,
       message: 'Ei löydy voimassa olevaa kuponkia tälle rekisterinumerolle',
+    })
+  }
+
+  if (order.email) {
+    sendCouponEmail({
+      to: order.email,
+      name: order.customerName,
+      code: coupon.code,
+      orderNumber: order.orderNumber,
+      expiresAt: coupon.expiresAt,
+    }).catch((err) => {
+      console.error('[coupon/claim] failed to send coupon email:', err)
     })
   }
 
