@@ -8,7 +8,10 @@
     </NuxtLink>
     <nav class="nav">
       <NuxtLink to="/" :class="['nav-link', { 'nav-link--light': isLightText }]">Asiakkaalle</NuxtLink>
-      <button v-if="isRestaurant" class="nav-link nav-link--light nav-logout" @click="logout">Kirjaudu ulos</button>
+      <template v-if="isRestaurant">
+        <span v-if="username" class="nav-user">{{ username }}</span>
+        <button class="nav-link nav-link--light nav-logout" @click="logout">Kirjaudu ulos</button>
+      </template>
       <NuxtLink v-else to="/restaurant/login" :class="['nav-link', { 'nav-link--light': isLightText }]">Ravintolalle</NuxtLink>
     </nav>
   </header>
@@ -20,6 +23,20 @@ const isLightText = computed(() =>
   route.path.startsWith('/restaurant/')
 )
 const isRestaurant = computed(() => route.path.startsWith('/restaurant/'))
+
+const username = ref('')
+watch(() => route.path, async (path) => {
+  if (!path.startsWith('/restaurant/')) {
+    username.value = ''
+    return
+  }
+  try {
+    const data = await $fetch<{ ok: boolean; username?: string }>('/api/auth/check')
+    username.value = data.username ?? ''
+  } catch {
+    username.value = ''
+  }
+}, { immediate: true })
 
 async function logout() {
   await $fetch('/api/auth/logout', { method: 'POST' })
@@ -69,6 +86,12 @@ async function logout() {
 .app-header--dark {
   background: #1a1a1a;
   border-bottom: 1px solid #2a2a2a;
+}
+
+.nav-user {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b7280;
 }
 
 .nav-logout {

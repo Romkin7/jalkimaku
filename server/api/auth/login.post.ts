@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const session = await useSession(event, getSessionConfig())
-  await session.update({ authenticated: true })
+  await session.update({ authenticated: true, username: admin.username })
 
   return { ok: true }
 })

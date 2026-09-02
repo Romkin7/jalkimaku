@@ -42,6 +42,10 @@ const password = ref('')
 const loading = ref(false)
 const error = ref('')
 
+$fetch('/api/auth/check')
+  .then(() => navigateTo('/restaurant/validate'))
+  .catch(() => {})
+
 async function submit() {
   loading.value = true
   error.value = ''
@@ -52,6 +56,8 @@ async function submit() {
     const status = err?.statusCode ?? err?.response?.status
     if (status === 401) {
       error.value = 'Väärä tunnus tai salasana'
+    } else {
+      error.value = 'Jokin meni pieleen. Yritä uudelleen.'
     }
   } finally {
     loading.value = false

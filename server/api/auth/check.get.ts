@@ -5,5 +5,5 @@ export default defineEventHandler(async (event) => {
   if (!session.data.authenticated) {
     throw createError({ statusCode: 401 })
   }
-  return { ok: true }
+  return { ok: true, username: session.data.username as string }
 })
